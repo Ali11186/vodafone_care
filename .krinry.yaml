@@ -1,0 +1,10 @@
+project:
+  name: vodafone_care
+  type: flutter
+build:
+  default_type: release
+  output_path: build/app/outputs/flutter-apk
+cloud:
+  provider: github
+  workflow: build.yml
+  poll_interval: 8
