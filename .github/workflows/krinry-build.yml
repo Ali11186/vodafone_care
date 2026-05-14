@@ -19,18 +19,15 @@ jobs:
           java-version: 17
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.24.0'
           channel: stable
-      - run: echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties && echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
+      - run: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
       - run: flutter pub get
-      - run: flutter build apk --release --android-skip-build-dependency-validation
-      - name: Find and upload APK
-        run: |
-          APK=$(find . -name "app-release.apk" ! -path "*/sdk/*" 2>/dev/null | head -1)
-          echo "APK: $APK"
-          mkdir -p output
-          cp "$APK" output/app-release.apk
+      - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: output/app-release.apk
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: warn
