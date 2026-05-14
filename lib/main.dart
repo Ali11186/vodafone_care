@@ -6,8 +6,7 @@ import 'services/background_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  await initNotifications();
-  await initBackgroundService();
+  try { await initNotifications(); } catch (_) {}
   runApp(const MyApp());
 }
 
