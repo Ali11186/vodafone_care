@@ -25,15 +25,23 @@ jobs:
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
           echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
       - run: flutter pub get
-      - run: flutter build apk --release --android-skip-build-dependency-validation
-      - name: Upload APK
+      - name: Build APK
+        run: flutter build apk --release --android-skip-build-dependency-validation || true
+      - name: Find APK
         run: |
-          find . -name "*.apk" ! -path "*/sdk/*" ! -path "*/ndk/*" 2>/dev/null
-          mkdir -p output
-          APK=$(find . -name "app-release.apk" ! -path "*/sdk/*" ! -path "*/ndk/*" 2>/dev/null | head -1)
-          if [ -n "$APK" ]; then cp "$APK" output/app-release.apk; fi
+          echo "=== Searching for APK ==="
+          find /home/runner/work -name "*.apk" 2>/dev/null
+          echo "=== Done ==="
+          APK=$(find /home/runner/work -name "app-release.apk" 2>/dev/null | head -1)
+          if [ -n "$APK" ]; then
+            mkdir -p output
+            cp "$APK" output/app-release.apk
+            echo "Found: $APK"
+          else
+            echo "No APK found!"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: output/app-release.apk
-          if-no-files-found: warn
