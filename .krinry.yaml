@@ -1,10 +1,13 @@
+# krinry configuration v3.1.1
 project:
   name: vodafone_care
   type: flutter
+
 build:
-  default_type: release
+  default_type: debug
   output_path: build/app/outputs/flutter-apk
+
 cloud:
   provider: github
-  workflow: build.yml
+  workflow: krinry-build.yml
   poll_interval: 8
